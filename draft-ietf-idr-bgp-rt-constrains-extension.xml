@@ -157,7 +157,7 @@
        Target membership NLRI.  To highlight situations where such
        summarization is useful, consider the various forms of Route Target
        extended community from <xref target="RFC4360"/>.  In each of those
-       types, the Type field is 0x02, with the Sub-Type selecting the format:
+       types, the Sub-Type field is 0x02, with the Type selecting the format:
         <list style="symbols">
 	<t>0x00 - 2-octet Global Administrator field, 4-octet Local
 	   Administrator field.</t>
@@ -187,18 +187,18 @@
        </figure>
     </t>
 
-    <t>Summarization offer several useful options where the Type of the Route
+    <t>Summarization offer several useful options where the Sub-Type of the Route
        Target Extended Community is 0x02:
        <list style="symbols">
-       <t>Sub-Type = 0x00 and Prefix Length = 48: Match all 2-octet Global
+       <t>Type = 0x00 and Prefix Length = 48: Match all 2-octet Global
 	  Administrator fields of a given value; e.g. Origin AS 64511:Route
 	  Target 64496:*.
        </t>
-       <t>Sub-Type = 0x01 and Prefix Length = 64: Match all 4-octet Global
+       <t>Type = 0x01 and Prefix Length = 64: Match all 4-octet Global
 	  Administrator fields of a given value; e.g. Origin AS 64511:Route
 	  Target 65551:*.
        </t>
-       <t>Sub-type = 0x03 and Prefix Length = 88: Match all IPv4 Address Global
+       <t>Type = 0x03 and Prefix Length = 88: Match all IPv4 Address Global
           Administrator fields of a given value; e.g. Origin AS 64511:Route Target
           192.0.2.*:*.
        </t>
@@ -211,10 +211,10 @@
        <t>Prefix Length = 32; e.g. Origin AS 64511:*.  This matches all classes
           of Extended Community originated from AS 64511.
        </t>
-       <t>Prefix Length = 40; e.g. Origin AS 64511:0x02:*.  This matches all
-	  Extended Communities originated from AS 64511 that have the first
-	  octet as 0x02, which includes the class of Extended Communities that
-	  are Route Target types.
+       <t>Prefix Length = 44; e.g. Origin AS 64511:0x0002:*.  This matches all
+	  Extended Communities originated from AS 64511 that have the first two
+	  octets as 0x0002, which includes the class of Extended Communities that
+	  are 2-octet Global Administrator Route Target types.
        </t>
        </list>
     </t>
@@ -229,9 +229,9 @@
        <t>Prefix Length = 31; e.g. Origin AS 6451[01]:*.  This matches all
           classes of Extended Community originated from Origin AS 64510 and 64511.
        </t>
-       <t>Prefix Length = 46; e.g. Origin AS 64511:0x0200:*.  This matches all
-	  Extended Communities originated from AS 64511 that include Route
-	  Targets (0x02) of Sub-Types 0x00, 0x01, 0x02, and 0x03.
+       <t>Prefix Length = 47; e.g. Origin AS 64511:0x0002:*.  This matches all
+	  two-octet AS-Specific Extended Communities originated from AS 64511
+	  that include Route Targets (0x02) and Route Origins (0x03).
        </t>
        </list>
     </t>
