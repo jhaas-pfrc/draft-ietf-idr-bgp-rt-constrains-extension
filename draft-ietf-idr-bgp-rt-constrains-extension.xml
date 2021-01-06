@@ -7,6 +7,7 @@
 <!ENTITY RFC4456 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4456.xml">
 <!ENTITY RFC4684 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.4684.xml">
 <!ENTITY RFC5398 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5398.xml">
+<!ENTITY RFC5575 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5575.xml">
 <!ENTITY RFC5701 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.5701.xml">
 <!ENTITY RFC7432 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.7432.xml">
 <!ENTITY RFC8092 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8092.xml">
@@ -59,11 +60,11 @@
 
     <abstract>
       <t>This document defines a mechanism based upon the Constrained Route
-	 Distribution for BGP (RFC 4684) so that it works with various types of
-	 BGP Community-like Path Attributes.  Similar to RFC 4684, this
-	 mechanism can be used to build a route distribution graph to limit the
-	 propagation of BGP Routes.  Unlike RFC 4684, this mechanism is not
-	 restricted to BGP Extended Communities (RFC 4360).
+         Distribution for BGP (RFC 4684) so that it works with various types of
+         BGP Community-like Path Attributes.  Similar to RFC 4684, this
+         mechanism can be used to build a route distribution graph to limit the
+         propagation of BGP Routes.  Unlike RFC 4684, this mechanism is not
+         restricted to BGP Extended Communities (RFC 4360).
       </t>
     </abstract>
 
@@ -124,7 +125,7 @@
     <t>IPv6 Extensions for Route Target Distribution 
        <xref target="I-D.ietf-idr-bgp-ipv6-rt-constrain"/> proposes to permit
        matching for IPv6 address specific Extended Communities using 
-       <xref target="RFC4684"/> by overloading the Prefix Length for Route Target
+       <xref target="RFC4684"/> by overloading the NLRI length for Route Target
        membership NLRI for NLRI longer than 96 bits.  (See 
        <xref target="RFC4684"/>, Section 4.)  However, this doesn't account for
        Route Target membership NLRI length shorter than 96 bits.  These shorter
@@ -153,18 +154,18 @@
 
     <section title="Structure of BGP Community-like Attributes">
     <t><xref target="RFC4684"/> provides for matching less-specific BGP
-       Extended Communities by utilizing a shorter Prefix Length for the Route
+       Extended Communities by utilizing a shorter NLRI length for the Route
        Target membership NLRI.  To highlight situations where such
        summarization is useful, consider the various forms of Route Target
        extended community from <xref target="RFC4360"/>.  In each of those
        types, the Sub-Type field is 0x02, with the Type selecting the format:
         <list style="symbols">
-	<t>0x00 - 2-octet Global Administrator field, 4-octet Local
-	   Administrator field.</t>
-	<t>0x01 - 4-octet Global Administrator field, 2-octet Local
-	   Administrator field.</t>
-	<t>0x02 - 4-octet IPv4 Address Global Administrator field, 2-octet
-	   Local Administrator field.</t>
+        <t>0x00 - 2-octet Global Administrator field, 4-octet Local
+           Administrator field.</t>
+        <t>0x01 - 4-octet Global Administrator field, 2-octet Local
+           Administrator field.</t>
+        <t>0x02 - 4-octet IPv4 Address Global Administrator field, 2-octet
+           Local Administrator field.</t>
         </list>
     </t>
 
@@ -190,15 +191,15 @@
     <t>Summarization offer several useful options where the Sub-Type of the Route
        Target Extended Community is 0x02:
        <list style="symbols">
-       <t>Type = 0x00 and Prefix Length = 48: Match all 2-octet Global
-	  Administrator fields of a given value; e.g. Origin AS 64511:Route
-	  Target 64496:*.
+       <t>Type = 0x00 and NLRI length = 48: Match all 2-octet Global
+          Administrator fields of a given value; e.g. Origin AS 64511:Route
+          Target 64496:*.
        </t>
-       <t>Type = 0x01 and Prefix Length = 64: Match all 4-octet Global
-	  Administrator fields of a given value; e.g. Origin AS 64511:Route
-	  Target 65551:*.
+       <t>Type = 0x01 and NLRI length = 64: Match all 4-octet Global
+          Administrator fields of a given value; e.g. Origin AS 64511:Route
+          Target 65551:*.
        </t>
-       <t>Type = 0x03 and Prefix Length = 88: Match all IPv4 Address Global
+       <t>Type = 0x03 and NLRI length = 88: Match all IPv4 Address Global
           Administrator fields of a given value; e.g. Origin AS 64511:Route Target
           192.0.2.*:*.
        </t>
@@ -208,13 +209,13 @@
     <t>Similarly, for inter-domain purposes, matching all Route Target
        Membership NLRI for a given Origin AS may be useful:
        <list style="symbols">
-       <t>Prefix Length = 32; e.g. Origin AS 64511:*.  This matches all classes
+       <t>NLRI length = 32; e.g. Origin AS 64511:*.  This matches all classes
           of Extended Community originated from AS 64511.
        </t>
-       <t>Prefix Length = 44; e.g. Origin AS 64511:0x0002:*.  This matches all
-	  Extended Communities originated from AS 64511 that have the first two
-	  octets as 0x0002, which includes the class of Extended Communities that
-	  are 2-octet Global Administrator Route Target types.
+       <t>NLRI length = 44; e.g. Origin AS 64511:0x0002:*.  This matches all
+          Extended Communities originated from AS 64511 that have the first two
+          octets as 0x0002, which includes the class of Extended Communities that
+          are 2-octet Global Administrator Route Target types.
        </t>
        </list>
     </t>
@@ -226,17 +227,17 @@
        may be difficult to discern from the NLRI in question.  Some examples:
 
        <list style="symbols">
-       <t>Prefix Length = 31; e.g. Origin AS 6451[01]:*.  This matches all
+       <t>NLRI length = 31; e.g. Origin AS 6451[01]:*.  This matches all
           classes of Extended Community originated from Origin AS 64510 and 64511.
        </t>
-       <t>Prefix Length = 47; e.g. Origin AS 64511:0x0002:*.  This matches all
-	  two-octet AS-Specific Extended Communities originated from AS 64511
-	  that include Route Targets (0x02) and Route Origins (0x03).
+       <t>NLRI length = 47; e.g. Origin AS 64511:0x0002:*.  This matches all
+          two-octet AS-Specific Extended Communities originated from AS 64511
+          that include Route Targets (0x02) and Route Origins (0x03).
        </t>
        </list>
     </t>
 
-    <t>The purpose of highlighting that a variable Prefix Length applied in
+    <t>The purpose of highlighting that a variable NLRI length applied in
        these ways is to demonstrate the flexibility of summarization. 
        This is most true when the structure of that attribute is
        arranged most general to most specific; i.e. Global to Local Admin as we
@@ -250,8 +251,8 @@
        Community-like attributes, the following new NLRI is defined.  The
        "Extended Route Target Constrain" NLRI uses a new SAFI (TBD) with the
        following format:
-    <figure>
-        <artwork>
+       <figure>
+           <artwork>
 
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
@@ -263,9 +264,32 @@
 ~                Community-like Value (variable)                ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-        </artwork>
-    </figure>
+           </artwork>
+       </figure>
     </t>
+
+    <t>To support potentially large Community-like Values, the NLRI length
+       field is encoded using 1- or 2-octets using the same mechanism as 
+       <xref target="RFC5575"/>, Section 4.  The text from that RFC is copied
+       here:
+
+       <figure>
+           <artwork>
+    If the NLRI length value is smaller than 240 (0xf0 hex),
+    the length field can be encoded as a single octet.
+    Otherwise, it is encoded as an extended-length 2-octet
+    value in which the most significant nibble of the first
+    byte is all ones.
+  
+    In the figure above, values less-than 240 are encoded
+    using two hex digits (0xnn).  Values above 240 are encoded
+    using 3 hex digits (0xfnnn).  The highest value that can
+    be represented with this encoding is 4095.  The value 241
+    is encoded as 0xf0f1.
+           </artwork>
+       </figure>
+    </t>
+
     <t>The two-octet Community Selector identifies the type of Community-like
        attribute in a BGP-route to apply the Constrained Route Distribution
        procedures to.  The value of this field, registered with IANA, may
@@ -277,8 +301,9 @@
        community values may be Bitmask Route Targets 
        <xref target="I-D.zzhang-idr-bitmask-route-target"/> defined inside a
        BGP Wide Community Container, or newly define sub-TLVs in a BGP Tunnel
-       Encapsulation Attribute.</t>
-    <t>Although the previous text suggests that the Prefix Length permits for
+       Encapsulation Attribute.
+    </t>
+    <t>Although the previous text suggests that the NLRI length permits for
        substantial flexibility for what Community-like attributes could be
        used, it is strongly RECOMMENDED that only simply structured attributes
        be matched by this feature.  As an example, TLV encodings of an
@@ -289,6 +314,152 @@
        prefix for that attribute.  
     </t>
    </section>
+
+   <section title="Examples">
+   <section title="Large BGP Communities">
+   <t><xref target="RFC8092"/> defines Large BGP Communities.  Its structure, from the RFC is:
+      <figure>
+          <artwork>
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                      Global Administrator                     |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Local Data Part 1                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |                       Local Data Part 2                       |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+          </artwork>
+      </figure>
+
+      Where each of the fields Global Administrator, Local Data Part 1, and Local
+      Data Part 2 are 4 octets in length.  The community is a fixed length of
+      12 octets.
+   </t>
+   <t>The Community Selector for Large BGP Communities is assigned 1, per this
+      document.
+   </t>
+
+   <t>The encoding for an Extended Route Target Constraint NLRI for Large BGP
+      Communities for an Origin AS of 64511, for Large BGP Community
+      65551:100:16777215 would be:
+
+      <figure>
+          <artwork>
+NLRI length          = 0x90 (144)
+Origin AS            = 0x0000fbff (64511)
+Community Selector   = 0x0001 (1)            # Large BGP Community
+Community-like Value = 0x0001000f (65551)    # Global Administrator
+                       0x00000064 (100)      # Local Data Part 1
+                       0x00ffffff (16777215) # Local Data Part 2
+          </artwork>
+      </figure>
+   </t>
+   </section>
+
+   <section title="Bitmask Route Target">
+   <t><xref target="I-D.zzhang-idr-bitmask-route-target"/> defines Bitmask
+      Route Targets. Bitmask Route Targets are encoded within the BGP Community
+      Container Path Attribute, which is defined in 
+      <xref target="I-D.ietf-idr-wide-bgp-communities"/>.  The structure of the
+      Bitmask Route Target, from the Internet-Draft, is:
+      <figure>
+          <artwork>
+    0                   1                   2                   3
+    0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  GA Type        |  GA Length        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Global Administrator (variable length)                       ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Local Administrator                                          |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  Bitmask Length |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   ~                   Bitmask (variable length)                   ~
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+   GA Type and GA Length are 1-octet in length.
+
+   Local Administrator is 4-octets in length.
+
+   The Bitmask is a number of octets that will fit the Bitmask Length.
+
+   The following GA Types and corresponding lengths are defined in this
+   document:
+
+   o  1: AS Number, 4-octets
+
+   o  2: IPv4 Address, 4-octets
+
+   o  3: IPv6 Address, 16-octets
+          </artwork>
+      </figure>
+   </t>
+
+   <t>The Community Selector for Bitmask Route Targets is assigned 2, per this
+      document.
+   </t>
+
+   <t>The Bitmask Route Target, a Community-like attribute, is contained in
+      another Path Attribute.  The Extended Route Target Constraint NLRI is not
+      constructed to match any portion of the Community Container itself;
+      rather it matches the Bitmask Route Target itself.
+   </t>
+
+   <section title="AS Number Bitmask Route Target">
+   <t>The encoding for a Extended Route Target Constraint NLRI for Origin 
+      AS 64511 for an AS-Number based  Bitmask Route Target for AS 65551 with
+      Local Administrator value 100 and a bitmask of 0xc0ffee (3 octets) would be:
+
+      <figure>
+          <artwork>
+NLRI length          = 0xa0 (160)
+Origin AS            = 0x0000fbff (64511)
+Community Selector   = 0x0002 (2)         # Bitmask Route Target
+Community-Like Value = 0x01 (1)           # GA Type AS Number
+                       0x04 (4)           # GA Length
+                       0x0001000f (65551) # Global Administrator
+                       0x00000064 (100)   # Local Administrator
+                       0x03 (3)           # Bitmask Length
+                       0xc0ffee           # Bitmask
+          </artwork>
+      </figure>
+   </t>
+   </section>
+
+   <section title="IPv6 Address Bitmask Route Target">
+   <t>The encoding for a Extended Route Target Constraint NLRI for Origin 
+      AS 64511 for an AS-Number based  Bitmask Route Target for 2001:DB8::2 with
+      Local Administrator value 100 and a bitmask of 0xc0ffee (3 octets) would be:
+
+      <figure>
+          <artwork>
+NLRI length          = 0xf108 (264)
+Origin AS            = 0x0000fbff (64511)
+Community Selector   = 0x0002 (2)         # Bitmask Route Target
+Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
+                       0x04 (16)          # GA Length
+                       0x2001 0DB8 0000 0000 0000 0000 0000 0000
+                       0x0000 0000 0000 0000 0000 0000 0000 0002
+                                          # Global Administrator
+                       0x00000064 (100)   # Local Administrator
+                       0x03 (3)           # Bitmask Length
+                       0xc0ffee           # Bitmask
+          </artwork>
+      </figure>
+   </t>
+   </section>
+
+   </section>
+
+
+   </section>
+
+   <section title="Error Handling">
+   <!-- TODO -->
+   </section>
+
     <section anchor="Security" title="Security Considerations">
       <t>This document does not change security aspects as discussed in
          <xref target="RFC4684"/>.
@@ -303,27 +474,37 @@
        Route Target Constrain Community Selector Registry.  It should have the
        following initial values and registration policies assigned:
     </t>
-<texttable title="Community Selector">
-<ttcol>Value</ttcol>
-<ttcol>Description</ttcol>
-<ttcol>Reference</ttcol>
-<c>0</c>
-<c>RESERVED</c>
-<c>&lt;This Document&gt;</c>
 
-<c>1..64511</c>
-<c>First Come, First Served</c>
-<c/>
+    <t>
+    <figure>
+        <artwork>
+Community Selector
 
-<c>64512..65534</c>
-<c>Experimental</c>
-<c/>
+   Value      Description
+              Defining Specification for Community-like attribute
+              Reference for this Value
 
-<c>65535</c>
-<c>RESERVED</c>
-<c>&lt;This Document&gt;</c>
+       0      RESERVED
+              -
+              &lt;This Document&gt;
 
-</texttable>
+       1      Large BGP Communities
+              RFC 8092
+              &lt;This Document&gt;
+
+       2      Bitmask Route Targets         
+              draft-zzhang-idr-bitmask-route-target
+              &lt;This Document&gt;
+
+3..64511      Available for first come, first served allocation.
+
+     255      RESERVED
+              -
+              &lt;This Document&gt;
+        </artwork>
+    </figure>
+    </t>
+
     </section>
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>The authors would like to thank John Scudder for his comments and
@@ -337,6 +518,7 @@
       &RFC2119;
       &RFC4360;
       &RFC4684;
+      &RFC5575;
       &RFC8174;
     </references>
     <references title="Informative References">
