@@ -16,6 +16,7 @@
 <!ENTITY IPV6-RT-CONSTRAIN SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-idr-bgp-ipv6-rt-constrain-12.xml">
 <!ENTITY WIDE-COMMUNITIES SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-idr-wide-bgp-communities-05.xml">
 <!ENTITY BITMASK-ROUTE-TARGET SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-zzhang-idr-bitmask-route-target-00.xml">
+<!ENTITY TUNNEL-ENCAPS SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-tunnel-encaps.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc tocompact="yes"?>
@@ -59,8 +60,8 @@
     <workgroup>idr</workgroup>
 
     <abstract>
-      <t>This document defines a mechanism based upon the Constrained Route
-         Distribution for BGP (RFC 4684) so that it works with various types of
+      <t>This document defines a mechanism based upon Constrained Route
+         Distribution for BGP (RFC 4684) that works with various types of
          BGP Community-like Path Attributes.  Similar to RFC 4684, this
          mechanism can be used to build a route distribution graph to limit the
          propagation of BGP Routes.  Unlike RFC 4684, this mechanism is not
@@ -82,9 +83,9 @@
   <middle>
     <section title="Introduction">
     <t>In BGP/MPLS Layer 3 VPNs (<xref target="RFC4364"/>), Route Target
-       Extended Communities <xref target="RFC4360"/> are used to control the
-       VPN membership.  Networks providing VPN services may be of significant
-       routing scale.  In such networks, VPN routes for a given VPN may be only
+       Extended Communities <xref target="RFC4360"/> are used to control
+       VPN membership.  Networks providing VPN services may be large.
+       In such networks, VPN routes for a given VPN may be only
        needed at a small subset of Provider Edge (PE) routers.  
     </t>
     <t>The Constrained Route Distribution feature <xref target="RFC4684"/>
@@ -99,27 +100,29 @@
        have been created that leverage the original concepts in 
        <xref target="RFC4364"/>.  While many of these new features similarly
        use Route Target Extended Communities for VPN membership, some use other
-       Extended Communities.  I.e., they utilize a different Type/Sub-Type code
+       Extended Communities.  That is, they utilize a different Type/Sub-Type code
        than those defined in <xref target="RFC4360"/>.  An example of this is
        the ES-Import Route Target defined in <xref target="RFC7432"/>.
     </t>
     <t>While <xref target="RFC4684"/> is explicit about being utilized for
-       Route Targets, the definition of a Route Target becomes more fluid as
-       VPN features have been introduced; e.g., ES-Import.   It could be
+       Route Targets, the definition of a Route Target has become more fluid as
+       VPN features have been introduced; for example, ES-Import.   It could be
        observed that that <xref target="RFC4684"/> is capable of being used on
        any type of <xref target="RFC4360"/> BGP Extended Community, for any VPN
-       route type.  To do so, no change to the protocol is required.  Instead,
-       the changes are for a Route Target membership NLRI what Extended
-       Communities and what VPN route types are allowed to be matched.
+       route type.  To do so, no change to the basic mechanism of the protocol 
+       is required.  Instead, in this specification we introduce a new form
+       of NLRI that permits Extended Communities other than traditional Route
+       Targets to be matched. Furthermore, it permits similar attributes to
+       be matched.
     </t>
     <t>
        <xref target="RFC5701"/> introduced the IPv6 Address Specific BGP
-       Extended Community Attribute.  This new type of BGP Community permits
+       Extended Community Attribute.  This type of BGP Community permits
        the encoding of an IPv6 address as the Global Administrator of a route.
        Similar to the <xref target="RFC4360"/> Extended Communities, the IPv6
        Address Specific type carries a Type and Sub-Type field.  One of the
        Type/Sub-Type allocations is for an IPv6 address specific Route Target.
-       This permits operators to leverage IPv6 address semantics when building
+       This permits operators to leverage IPv6 addressing when building
        their VPNs.
     </t>
     <t>IPv6 Extensions for Route Target Distribution 
@@ -132,7 +135,7 @@
        prefixes permit matching of many more specific Route Targets from a less
        specific Route Target membership BGP Route.
     </t>
-    <t>A different mechanism is needed for safely matching IPv6 address
+    <t>Therefore, a different mechanism is needed for safely matching IPv6 address
        specific Route Targets.  The simplest change would be to utilize a new
        AFI/SAFI for IPv6 Route Target Distribution that only matches IPv6
        address specific Route Targets.  However, it can be observed that
@@ -144,9 +147,9 @@
        Targets <xref target="I-D.zzhang-idr-bitmask-route-target"/>.
     </t>
 
-    <t>This document proposes a new mechanism to match arbitrary BGP
+    <t>This document proposes a mechanism to match arbitrary BGP
        Community-like attributes, including those with Route Target-like
-       semantics for building Constrained Route Distribution graphs for BGP
+       semantics, for building Constrained Route Distribution graphs for BGP
        routes containing those attributes.
     </t>
 
@@ -173,7 +176,7 @@
        Autonomous System number.
     </t>
 
-    <t>As a reminder, the format of the current Route Target membership NLRI in
+    <t>As a reminder, the format of the Route Target membership NLRI in
        <xref target="RFC4684"/> follows.  It may be of length from 0 to 96 bits.
        <figure>
           <artwork>
@@ -188,19 +191,19 @@
        </figure>
     </t>
 
-    <t>Summarization offer several useful options where the Sub-Type of the Route
-       Target Extended Community is 0x02:
+    <t>Summarization offers several useful options where the Sub-Type of the Route
+       Target Extended Community is 0x02. Examples include:
        <list style="symbols">
        <t>Type = 0x00 and NLRI length = 48: Match all 2-octet Global
-          Administrator fields of a given value; e.g. Origin AS 64511:Route
+          Administrator fields of a given value; for example Origin AS 64511:Route
           Target 64496:*.
        </t>
        <t>Type = 0x01 and NLRI length = 64: Match all 4-octet Global
-          Administrator fields of a given value; e.g. Origin AS 64511:Route
+          Administrator fields of a given value; for example Origin AS 64511:Route
           Target 65551:*.
        </t>
        <t>Type = 0x03 and NLRI length = 88: Match all IPv4 Address Global
-          Administrator fields of a given value; e.g. Origin AS 64511:Route Target
+          Administrator fields of a given value; for example Origin AS 64511:Route Target
           192.0.2.*:*.
        </t>
        </list>
@@ -209,10 +212,10 @@
     <t>Similarly, for inter-domain purposes, matching all Route Target
        Membership NLRI for a given Origin AS may be useful:
        <list style="symbols">
-       <t>NLRI length = 32; e.g. Origin AS 64511:*.  This matches all classes
+       <t>NLRI length = 32; for example Origin AS 64511:*.  This matches all classes
           of Extended Community originated from AS 64511.
        </t>
-       <t>NLRI length = 44; e.g. Origin AS 64511:0x0002:*.  This matches all
+       <t>NLRI length = 44; for example Origin AS 64511:0x0002:*.  This matches all
           Extended Communities originated from AS 64511 that have the first two
           octets as 0x0002, which includes the class of Extended Communities that
           are 2-octet Global Administrator Route Target types.
@@ -220,35 +223,35 @@
        </list>
     </t>
 
-    <t>And perversely to nonsensically, it's possible to utilize a Prefix
-       Length that cuts into a well defined field.  When the structure of that
+    <t>It's even possible to utilize a Prefix
+       Length that splits a well defined field.  When the structure of that
        field is understood, clever operators may be able to generate summaries.
        It should be noted that understanding the intent of such summarization
        may be difficult to discern from the NLRI in question.  Some examples:
 
        <list style="symbols">
-       <t>NLRI length = 31; e.g. Origin AS 6451[01]:*.  This matches all
-          classes of Extended Community originated from Origin AS 64510 and 64511.
+       <t>NLRI length = 31; for example Origin AS 6451[01]:*.  This matches all
+          classes of Extended Community originated from Origin ASes 64510 and 64511.
        </t>
-       <t>NLRI length = 47; e.g. Origin AS 64511:0x0002:*.  This matches all
+       <t>NLRI length = 47; for example Origin AS 64511:0x0002:*.  This matches all
           two-octet AS-Specific Extended Communities originated from AS 64511
           that include Route Targets (0x02) and Route Origins (0x03).
        </t>
        </list>
     </t>
 
-    <t>The purpose of highlighting that a variable NLRI length applied in
+    <t>The purpose of highlighting that a variable NLRI length can be applied in
        these ways is to demonstrate the flexibility of summarization. 
        This is most true when the structure of that attribute is
-       arranged most general to most specific; i.e. Global to Local Admin as we
+       arranged most general to most specific; that is, Global to Local Admin as we
        have in Extended Communities.
     </t>
 
     </section>
 
     <section title="Specification">
-    <t>To support applying Constrained Route Distribution procedures to new BGP
-       Community-like attributes, the following new NLRI is defined.  The
+    <t>To support applying Constrained Route Distribution procedures to BGP
+       Community-like attributes, the following NLRI is defined.  The
        "Extended Route Target Constrain" NLRI uses a new SAFI (TBD) with the
        following format:
        <figure>
@@ -257,9 +260,9 @@
  0                   1                   2                   3
  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|                     Origin AS (4-octets)                      |
+|                     Origin AS (4 octets)                      |
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-|  Community Selector (2-octets)  | 
+|  Community Selector (2 octets)  | 
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 ~                Community-like Value (variable)                ~
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -269,7 +272,7 @@
     </t>
 
     <t>To support potentially large Community-like Values, the NLRI length
-       field is encoded using 1- or 2-octets using the same mechanism as 
+       field is encoded using 1 or 2 octets using the same mechanism as 
        <xref target="RFC5575"/>, Section 4.  The text from that RFC is copied
        here:
 
@@ -291,7 +294,7 @@
     </t>
 
     <t>The two-octet Community Selector identifies the type of Community-like
-       attribute in a BGP-route to apply the Constrained Route Distribution
+       attribute in a BGP route to apply the Constrained Route Distribution
        procedures to.  The value of this field, registered with IANA, may
        identify Community-like attributes that exist in a given BGP Path
        Attribute, or internal fields of structured BGP Path Attributes.
@@ -300,13 +303,13 @@
        <xref target="RFC8092"/> Large BGP Communities.  Examples of internal
        community values may be Bitmask Route Targets 
        <xref target="I-D.zzhang-idr-bitmask-route-target"/> defined inside a
-       BGP Wide Community Container, or newly define sub-TLVs in a BGP Tunnel
-       Encapsulation Attribute.
+       BGP Wide Community Container, or newly defined sub-TLVs in a BGP Tunnel
+       Encapsulation Attribute <xref target="I-D.ietf-idr-tunnel-encaps"/>.
     </t>
     <t>Although the previous text suggests that the NLRI length permits for
        substantial flexibility for what Community-like attributes could be
        used, it is strongly RECOMMENDED that only simply structured attributes
-       be matched by this feature.  As an example, TLV encodings of an
+       be matched by this feature.  As an example, TLV encoding of an
        attribute would make it unsuitable for these procedures.
     </t>
 
@@ -379,20 +382,19 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
    ~                   Bitmask (variable length)                   ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   GA Type and GA Length are 1-octet in length.
+   GA Type and GA Length are 1 octet in length.
 
-   Local Administrator is 4-octets in length.
+   Local Administrator is 4 octets in length.
 
    The Bitmask is a number of octets that will fit the Bitmask Length.
 
-   The following GA Types and corresponding lengths are defined in this
-   document:
+   The following GA Types and corresponding lengths are defined:
 
-   o  1: AS Number, 4-octets
+   o  1: AS Number, 4 octets
 
-   o  2: IPv4 Address, 4-octets
+   o  2: IPv4 Address, 4 octets
 
-   o  3: IPv6 Address, 16-octets
+   o  3: IPv6 Address, 16 octets
           </artwork>
       </figure>
    </t>
@@ -408,7 +410,7 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
    </t>
 
    <section title="AS Number Bitmask Route Target">
-   <t>The encoding for a Extended Route Target Constraint NLRI for Origin 
+   <t>The encoding for an Extended Route Target Constraint NLRI for Origin 
       AS 64511 for an AS-Number based  Bitmask Route Target for AS 65551 with
       Local Administrator value 100 and a bitmask of 0xc0ffee (3 octets) would be:
 
@@ -475,36 +477,39 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
        following initial values and registration policies assigned:
     </t>
 
-    <t>
-    <figure>
-        <artwork>
-Community Selector
+	<texttable style="all">
+	<ttcol width="20%">Value</ttcol>
+	<ttcol width="20%">Description</ttcol>
+	<ttcol>Defining Specification for Community-like attribute</ttcol>
+	<ttcol width="20%">Reference for this Value</ttcol>
+	
+	<c>0</c>
+	<c>RESERVED</c>
+	<c>-</c>
+	<c>This document</c>
+	
+	<c>1</c>
+	<c>Large BGP Communities</c>
+	<c>RFC 8092</c>
+	<c>This document</c>
 
-   Value      Description
-              Defining Specification for Community-like attribute
-              Reference for this Value
+	<c>2</c>
+	<c>Bitmask Route Targets</c>
+	<c>draft-zzhang-idr-bitmask-route-target</c>
+	<c>This document</c>
 
-       0      RESERVED
-              -
-              &lt;This Document&gt;
+	<c>3..64511</c>
+	<c>Available for first come, first served allocation.</c>
+	<c></c>
+	<c></c>
+	
+	<c>255</c>
+	<c>RESERVED</c>
+	<c>-</c>
+	<c>This document</c>	
 
-       1      Large BGP Communities
-              RFC 8092
-              &lt;This Document&gt;
-
-       2      Bitmask Route Targets         
-              draft-zzhang-idr-bitmask-route-target
-              &lt;This Document&gt;
-
-3..64511      Available for first come, first served allocation.
-
-     255      RESERVED
-              -
-              &lt;This Document&gt;
-        </artwork>
-    </figure>
-    </t>
-
+	</texttable>
+	
     </section>
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>The authors would like to thank John Scudder for his comments and
@@ -525,14 +530,15 @@ Community Selector
       &IPV6-RT-CONSTRAIN;
       &WIDE-COMMUNITIES;
       &BITMASK-ROUTE-TARGET;
+      &TUNNEL-ENCAPS;
       &RFC1997;
       &RFC4364;
       &RFC4456;
-      &RFC5398;
+<!-->      &RFC5398; -->
       &RFC5701;
       &RFC7432;
       &RFC8092;
-      &RFC8126;
+<!-->      &RFC8126; -->
     </references>
 
     <section title="Including AFI/SAFI in the NLRI">
