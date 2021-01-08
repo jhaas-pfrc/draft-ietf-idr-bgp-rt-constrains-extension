@@ -534,11 +534,11 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
       &RFC1997;
       &RFC4364;
       &RFC4456;
-<!-->      &RFC5398; -->
+      &RFC5398;
       &RFC5701;
       &RFC7432;
       &RFC8092;
-<!-->      &RFC8126; -->
+      &RFC8126;
     </references>
 
     <section title="Including AFI/SAFI in the NLRI">
