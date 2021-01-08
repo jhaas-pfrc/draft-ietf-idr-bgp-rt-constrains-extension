@@ -477,39 +477,39 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
        following initial values and registration policies assigned:
     </t>
 
-	<texttable style="all">
-	<ttcol width="20%">Value</ttcol>
-	<ttcol width="20%">Description</ttcol>
-	<ttcol>Defining Specification for Community-like attribute</ttcol>
-	<ttcol width="20%">Reference for this Value</ttcol>
-	
-	<c>0</c>
-	<c>RESERVED</c>
-	<c>-</c>
-	<c>This document</c>
-	
-	<c>1</c>
-	<c>Large BGP Communities</c>
-	<c>RFC 8092</c>
-	<c>This document</c>
+        <texttable style="all">
+        <ttcol width="20%">Value</ttcol>
+        <ttcol width="20%">Description</ttcol>
+        <ttcol>Defining Specification for Community-like attribute</ttcol>
+        <ttcol width="20%">Reference for this Value</ttcol>
+        
+        <c>0</c>
+        <c>RESERVED</c>
+        <c>-</c>
+        <c>This document</c>
+        
+        <c>1</c>
+        <c>Large BGP Communities</c>
+        <c>RFC 8092</c>
+        <c>This document</c>
 
-	<c>2</c>
-	<c>Bitmask Route Targets</c>
-	<c>draft-zzhang-idr-bitmask-route-target</c>
-	<c>This document</c>
+        <c>2</c>
+        <c>Bitmask Route Targets</c>
+        <c>draft-zzhang-idr-bitmask-route-target</c>
+        <c>This document</c>
 
-	<c>3..64511</c>
-	<c>Available for first come, first served allocation.</c>
-	<c></c>
-	<c></c>
-	
-	<c>255</c>
-	<c>RESERVED</c>
-	<c>-</c>
-	<c>This document</c>	
+        <c>3..64511</c>
+        <c>Available for first come, first served allocation.</c>
+        <c></c>
+        <c></c>
+        
+        <c>255</c>
+        <c>RESERVED</c>
+        <c>-</c>
+        <c>This document</c>        
 
-	</texttable>
-	
+        </texttable>
+        
     </section>
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>The authors would like to thank John Scudder for his comments and
