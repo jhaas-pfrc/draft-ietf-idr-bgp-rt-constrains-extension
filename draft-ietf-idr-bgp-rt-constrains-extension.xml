@@ -13,9 +13,9 @@
 <!ENTITY RFC8092 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8092.xml">
 <!ENTITY RFC8126 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8126.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml2rfc.ietf.org/public/rfc/bibxml/reference.RFC.8174.xml">
-<!ENTITY IPV6-RT-CONSTRAIN SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-idr-bgp-ipv6-rt-constrain-12.xml">
-<!ENTITY WIDE-COMMUNITIES SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-ietf-idr-wide-bgp-communities-05.xml">
-<!ENTITY BITMASK-ROUTE-TARGET SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-zzhang-idr-bitmask-route-target-00.xml">
+<!ENTITY IPV6-RT-CONSTRAIN SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-bgp-ipv6-rt-constrain.xml">
+<!ENTITY WIDE-COMMUNITIES SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-wide-bgp-communities.xml">
+<!ENTITY BITMASK-ROUTE-TARGET SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.zzhang-idr-bitmask-route-target.xml">
 <!ENTITY TUNNEL-ENCAPS SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-tunnel-encaps.xml">
 ]>
 <?rfc toc="yes"?>
