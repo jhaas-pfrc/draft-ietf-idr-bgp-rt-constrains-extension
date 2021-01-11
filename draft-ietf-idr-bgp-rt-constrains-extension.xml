@@ -123,8 +123,8 @@
     <t>The Origin AS contains the Autonomous System number of the originator of
        this NLRI.
     </t>
-    <t>The Route Target contains the BGP Route Target Extended Community, or a
-       prefix of one.
+    <t>The Route Target contains a BGP Route Target Extended Community, or a
+       prefix of a BGP Route Target Extended Community.
     </t>
     <t>Route Target membership NLRI act as a filter mechanism on VPN routes.
        The BGP Speaker receiving these Route Target membership NLRI from
@@ -138,7 +138,7 @@
     </t>
     </section>
 
-    <section title="Need for an Generic Route Constraint Distribution Mechanism">
+    <section title="Need for a Generic Route Constraint Distribution Mechanism">
     <t>Since BGP/MPLS Layer 3 VPNs were introduced, many new BGP VPN features
        have been created that leverage the original concepts in
        <xref target="RFC4364"/>.  While many of these new features similarly
@@ -202,7 +202,7 @@
     <section title="Community-like Attributes">
     <section title="Definition of Community-like Attributes">
     <t>BGP Communities were originally introduced in <xref target="RFC1997"/>.
-       That RFC defines a Community as, "A community is a group of destinations
+       That RFC contains the definition, "A community is a group of destinations
        which share some common property."  Recall that in BGP-4
        <xref target="RFC4271"/>, a BGP Route is defined as a pairing of
        destinations (NLRI) with Path Attributes.
@@ -216,8 +216,8 @@
     <t>Since <xref target="RFC1997"/>, this idea of marking BGP Routes has been
        extended to other mechanisms such as BGP Extended Communities
        <xref target="RFC4360"/>, and BGP Large Communities
-       <xref target="RFC8092"/>.  Other similar mechanisms are steadily under
-       consideration for standardization.
+       <xref target="RFC8092"/>.  Other similar mechanisms are regularly
+       considered for standardization.
     </t>
 
     <t>For purposes of this document, a Community-like Attribute (CLA) has the
@@ -331,6 +331,12 @@
            </artwork>
        </figure>
     </t>
+    
+    <t>It can be observed that the format of this NLRI emulates the format
+       of the Route Target membership NLRI from <xref target="RFC4684"/>,
+       with the addition of the CLA selector to permit the recipient to
+       correctly interpret the CLA value.
+    </t>
     </section>
 
     <section title="NLRI Length Encoding">
@@ -409,7 +415,7 @@
       document.
    </t>
 
-   <t>The encoding for an Generic Route Constraint Distribution Mechanism  NLRI
+   <t>The encoding for a Generic Route Constraint Distribution Mechanism  NLRI
       for an IPv6 Specific Extended Community for an Origin AS of 64511, for
       the IPv6 Specific Extended Community [2001:DB8::2]:100 would be:
 
@@ -455,7 +461,7 @@ Community-like Value = 0x0001000f (65551) # Global Administrator
       document.
    </t>
 
-   <t>The encoding for an Generic Route Cosntraint Mechanism NLRI for Large BGP
+   <t>The encoding for a Generic Route Cosntraint Mechanism NLRI for Large BGP
       Communities for an Origin AS of 64511, for Large BGP Community
       65551:100:16777215 would be:
 
@@ -515,14 +521,16 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
       document.
    </t>
 
-   <t>The Bitmask Route Target, a Community-like attribute, is contained in
-      another Path Attribute.  The Generic Route Constraint Distribution
-      Mechanism NLRI is not constructed to match any portion of the Community
-      Container itself; rather it matches the Bitmask Route Target itself.
+   <t>The Bitmask Route Target, a Community-like attribute, is carried as the
+      payload (that is, the value portion) of another Path Attribute. 
+      The Generic Route Constraint Distribution Mechanism NLRI is not
+      constructed to match any of the outer portions of the Community
+      Container; rather it matches only the payload, that is, the
+      Bitmask Route Target itself.
    </t>
 
    <section title="AS Number Bitmask Route Target">
-   <t>The encoding for an Generic Route Constraint Distribution Mechanism NLRI
+   <t>The encoding for a Generic Route Constraint Distribution Mechanism NLRI
       for Origin AS 64511 for an AS-Number based  Bitmask Route Target for AS
       65551 with Local Administrator value 100 and a bitmask of 0xc0ffee (3
       octets) would be:
@@ -574,27 +582,29 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
 
    <!--section title="Error Handling"-->
    <!-- TODO -->
+   <!-- my tiny bit of Spanish vocabulary tends to catch me on these -->
+   <!-- placeholders. As in, "why does it say 'everything'?" -->
    <!--/section-->
 
     <section anchor="Security" title="Security Considerations">
-      <t>This document does not change security aspects as discussed in
+      <t>This document does not change security aspects discussed in
          <xref target="RFC4684"/>.
       </t>
     </section>
     <section title="IANA Considerations">
     <t>This document requests IANA to assign a new SAFI, the  "Generic Route
-       Constrain Mechanism" from the First Come First Served "Subsequent Address
-       Family Identifiers (SAFI) Parameters" registry.
+       Constraint Distribution Mechanism" from the First Come First Served 
+       "Subsequent Address Family Identifiers (SAFI) Parameters" registry.
     </t>
-    <t>This documument requests IANA to create a new registry, the Extended
-       Route Target Constrain Community Selector Registry.  It should have the
+    <t>This documument requests IANA to create a new registry, the Generic
+       Route Constraint CLA Selector Registry.  It should have the
        following initial values and registration policies assigned:
     </t>
 
         <texttable style="all">
         <ttcol width="20%">Value</ttcol>
         <ttcol width="20%">Description</ttcol>
-        <ttcol>Defining Specification for Community-like attribute</ttcol>
+        <ttcol>Defining Specification for Community-like attribute (CLA)</ttcol>
         <ttcol width="20%">Reference for this Value</ttcol>
 
         <c>0</c>
