@@ -18,6 +18,7 @@
 <!ENTITY WIDE-COMMUNITIES SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-wide-bgp-communities.xml">
 <!ENTITY BITMASK-ROUTE-TARGET SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.zzhang-idr-bitmask-route-target.xml">
 <!ENTITY TUNNEL-ENCAPS SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-tunnel-encaps.xml">
+<!ENTITY RTC-NO-RT SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-idr-rtc-no-rt.xml">
 ]>
 <?rfc toc="yes"?>
 <?rfc tocompact="yes"?>
@@ -31,7 +32,7 @@
 <?rfc inline="yes"?>
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
-<rfc category="std" updates="4684" docName="draft-zzhang-idr-bgp-rt-constrains-extension-01" ipr="trust200902">
+<rfc category="std" updates="4684" docName="draft-zzhang-idr-bgp-rt-constrains-extension-02" ipr="trust200902">
   <front>
     <title abbrev="generic-rtc">Generic Route Constraint Distribution Mechanism for BGP</title>
 
@@ -95,7 +96,7 @@
        graph of VPN routes through the BGP routing infrastructure.  Much of the
        benefit of this feature comes from BGP routers, such as Route Reflectors
        <xref target="RFC4456"/>, avoiding the work of sending all VPN routes to
-       a PE that may simply discard unneded routes.  Instead, the PE may
+       a PE that may simply discard unneeded routes.  Instead, the PE may
        receive only the VPN routes for VPNs located on that PE.
     </t>
     </section>
@@ -478,6 +479,7 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
    </t>
    </section>
 
+<!-- XXX JMH need to update with bitmask RT -->
    <section title="Bitmask Route Target">
    <t><xref target="I-D.zzhang-idr-bitmask-route-target"/> defines Bitmask
       Route Targets. Bitmask Route Targets are encoded within the BGP Community
@@ -488,8 +490,8 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
           <artwork>
     0                   1                   2                   3
     0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
-   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
-   |  GA Type        |  GA Length        |
+   +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+   |  GA Type        |  GA Sub-Type  |  GA Length    |
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
    |  Global Administrator (variable length)                       ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
@@ -500,7 +502,7 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
    ~                   Bitmask (variable length)                   ~
    +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
 
-   GA Type and GA Length are 1 octet in length.
+   GA Type, GA Sub-Type, and GA Length are 1 octet in length.
 
    Local Administrator is 4 octets in length.
 
@@ -537,10 +539,11 @@ Community-like Value = 0x0001000f (65551)    # Global Administrator
 
       <figure>
           <artwork>
-NLRI length          = 0xa0 (160)
+NLRI length          = 0xa8 (168)
 Origin AS            = 0x0000fbff (64511)
 Community Selector   = 0x0002 (3)         # Bitmask Route Target
 Community-Like Value = 0x01 (1)           # GA Type AS Number
+                       0x02 (2)           # GA Sub-Type (Route Target)
                        0x04 (4)           # GA Length
                        0x0001000f (65551) # Global Administrator
                        0x00000064 (100)   # Local Administrator
@@ -563,7 +566,8 @@ NLRI length          = 0xf108 (264)
 Origin AS            = 0x0000fbff (64511)
 Community Selector   = 0x0002 (2)         # Bitmask Route Target
 Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
-                       0x04 (16)          # GA Length
+                       0x02 (2)           # GA Sub-Type (Route Target)
+                       0x10 (16)          # GA Length
                        0x2001 0DB8 0000 0000 0000 0000 0000 0000
                        0x0000 0000 0000 0000 0000 0000 0000 0002
                                           # Global Administrator
@@ -582,8 +586,6 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
 
    <!--section title="Error Handling"-->
    <!-- TODO -->
-   <!-- my tiny bit of Spanish vocabulary tends to catch me on these -->
-   <!-- placeholders. As in, "why does it say 'everything'?" -->
    <!--/section-->
 
     <section anchor="Security" title="Security Considerations">
@@ -661,6 +663,7 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
       &WIDE-COMMUNITIES;
       &BITMASK-ROUTE-TARGET;
       &TUNNEL-ENCAPS;
+      &RTC-NO-RT;
       &RFC1997;
       &RFC4364;
       &RFC4456;
@@ -670,5 +673,19 @@ Community-Like Value = 0x01 (1)           # GA Type IPv6 Address
       &RFC8092;
       &RFC8126;
     </references>
+    <section title="Open Issues">
+      <t><list style="symbols">
+	<t>How should BGP Routes with no communities of a given type be handled?  The scenario
+	   covered in <xref target="I-D.ietf-idr-rtc-no-rt"/> becomes potentially far more
+	   common.
+        </t>
+      </list></t>
+    </section>
+    <section title="Change Log">
+      <t><list style="symbols">
+	<t>01 -> 02: Update text for bitmask route target definition.  Add open issues.
+        </t>
+      </list></t>
+    </section>
   </back>
 </rfc>
